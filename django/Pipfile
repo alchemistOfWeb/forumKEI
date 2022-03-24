@@ -6,6 +6,10 @@ name = "pypi"
 [packages]
 django = "*"
 python-dotenv = {extras = ["cli"], version = "*"}
+djangorestframework = "*"
+markdown = "*"
+django-filter = "*"
+djoser = "*"
 
 [dev-packages]
 
