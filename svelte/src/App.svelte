@@ -4,20 +4,20 @@
 	import { routes } from "./routes.js";
 </script>
   
-<main>
-	<h1><a href="/" use:link>Forum Kei</a></h1>
-	<Router {routes}/>
-</main>
+<Router {routes}/>
+<!-- <h1><a href="/" use:link>Forum Kei</a></h1> -->
 
 <style>
+	@import "/node_modules/bootstrap/scss/bootstrap";
+	
 	@import url("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
 
 	:global(body) {
-		margin: 0;
-		padding: 20px;
+		margin: 0px;
+		padding: 0px;
 	}
-
-	:global(a) {
+	
+	/* :global(a) {
 		text-decoration: none;
 		color: #551a8b;
 	}
@@ -40,5 +40,5 @@
 		main {
 			max-width: none;
 		}
-	}
+	}  */
 </style>
