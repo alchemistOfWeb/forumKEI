@@ -9,7 +9,7 @@ urlpatterns = [
     # path('auth/', include('djoser.urls')),
     # path('auth/', include('djoser.urls.authtoken')),
     # path('auth/', include('djoser.urls.jwt')),
-    path('api-auth/', include('forum_api.urls', namespace='forum_api')),
+    path('api/v1/', include('forum_api.urls')),
 ]
 
 if settings.DEBUG:

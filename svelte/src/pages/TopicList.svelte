@@ -1,9 +1,9 @@
 <script>
-    import { BACKEND_DOMAIN } from './Components/Global.svelte';
+    import { BACKEND_ROOT_URL } from './Components/Global.svelte';
     export let section = 1;
     let page = 1;
 
-    let topicsResponse = fetch(BACKEND_DOMAIN + `/${section}/topics?page=${page}`, {
+    let topicsResponse = fetch(BACKEND_ROOT_URL + `${section}/topics?page=${page}`, {
         method: 'GET',
         headers: {}
     }).then((body) => {

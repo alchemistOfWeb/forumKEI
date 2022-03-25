@@ -1,101 +1,157 @@
 from django.shortcuts import render
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from .models import Topic, TopicComment, Section, Profile
 from django.shortcuts import get_object_or_404
-from rest_framework import viewsets, status, permissions
+from django.http import JsonResponse
+from django.core import serializers
+from rest_framework.decorators import api_view, action, permission_classes
+from rest_framework.response import Response
+from rest_framework.filters import OrderingFilter, SearchFilter
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import viewsets, status, permissions, generics
 from rest_framework.views import APIView
-from .serializers import TopicSerializer, TopicCommentSerializer
-
-PAGINATION_NUM = 10
+from .models import Topic, TopicComment, Section, Profile
+from .serializers import TopicSerializer, TopicCommentSerializer, SectionSerializer
+from .filters import TopicFilter
 
 
 # class SectionListView(APIView)
 # ----------- PROFILE ----------- #
-@api_view(['POST'])
-def profile_block(request, user_pk):
-    get_object_or_404(Profile.objects, user=user_pk)
-    data = {"message": "user blocked", "errors": []}
-    return Response(data, status=status.HTTP_204_NO_CONTENT)
+# @api_view(['POST'])
+# def profile_block(request, user_pk):
+#     get_object_or_404(Profile.objects, user=user_pk)
+#     data = {"message": "user blocked", "errors": []}
+#     return Response(data, status=status.HTTP_204_NO_CONTENT)
 
 
 # ----------- SECTIONS ----------- #
 @api_view(['GET'])
 def section_list(request):
-    data = {
-        "sections": Section.objects.all()
-    }
-    return Response(data)
+    sections = Section.objects.all()
+    serializer = SectionSerializer(sections, many=True)
+    return Response(serializer.data)
 
 
 # ----------- TOPICS ----------- #
-@api_view(['GET'])
-def topic_list(request, section_pk):
-    page = request.query_params.get('page')
-
-    if not page:
-        page = 1
-
-    to_topic = page * PAGINATION_NUM
-    from_topic = to_topic - PAGINATION_NUM
-
-    data = {
-        "topics": Topic.objects.filter(section=section_pk)[from_topic:to_topic]
-    }
-    return Response(data)
-
-
-@api_view(['PATCH'])
-def topic_detail(request, section_pk, topic_pk):
+class TopicViewSet(viewsets.ViewSet):
     queryset = Topic.objects
-    topic = get_object_or_404(queryset, pk=topic_pk)
-    serializer = TopicSerializer(topic, data=request.data, partial=True)
-    serializer.is_valid(raise_exception=True)
-    serializer.save()
-    return Response(data=serializer.data, status=status.HTTP_200_OK)
+    serializer_class = TopicSerializer
+    filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
+    filterset_class = TopicFilter
+    ordering_fields = ['created_at', 'updated_at']
+    search_fields = ['author__username', 'title']
+    ordering = ['updated_at']
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    # swagger_schema = CustomAutoSchema
+    # my_tags = ['Tasks']
 
+    def filter_queryset(self, queryset):
+        for backend in self.filter_backends:
+            queryset = backend().filter_queryset(self.request, queryset, view=self)
 
-# ----------- COMMENTS ----------- #
-@api_view(['GET', 'POST'])
-def topic_comment_list(request, section_pk, topic_pk):
-    if request.method == 'GET':
-        comments = TopicComment.objects.filter(topic=topic_pk)
-        serializer = TopicCommentSerializer(comments, many=True)
+        return queryset
+
+    def list(self, request, section_pk=None):
+        topics = self.queryset.filter(section=section_pk)
+        serializer = self.serializer_class(self.filter_queryset(topics), many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
-    if request.method == 'POST':
+    def create(self, request, section_pk=None):
         data = request.data
-        serializer = TopicCommentSerializer(data=data)
+        serializer = self.serializer_class(data=data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+    # def retrieve(self, request, section_pk=None):
+    def update(self, request, section_pk=None, pk=None):
+        task = get_object_or_404(self.queryset, pk=pk)
+        serializer = self.serializer_class(task, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(status=status.HTTP_205_RESET_CONTENT)
 
-@api_view(['PATCH'])
-def topic_comment_modify(request, section_pk, topic_pk, comment_id):
+    def partial_update(self, request, section_pk=None, pk=None):
+        task = get_object_or_404(self.queryset, pk=pk)
+        serializer = self.serializer_class(task, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(status=status.HTTP_205_RESET_CONTENT)
+
+    @action(detail=True, methods=['patch'])
+    def block(self, request, section_pk=None, topic_pk=None):
+        topic = get_object_or_404(self.queryset, pk=topic_pk)
+        topic.is_blocked = True
+        topic.save()
+        return Response(status=status.HTTP_205_RESET_CONTENT)
+
+    @action(detail=True, methods=['patch'])
+    def close(self, request, section_pk=None, topic_pk=None):
+        topic = get_object_or_404(self.queryset, pk=topic_pk)
+        topic.is_open = False
+        topic.save()
+        return Response(status=status.HTTP_205_RESET_CONTENT)
+
+
+# ----------- COMMENTS ----------- #
+class TopicCommentViewSet(viewsets.ViewSet):
     queryset = TopicComment.objects
-    comment = get_object_or_404(queryset, pk=comment_id)
-    serializer = TopicCommentSerializer(comment, data=request.data, partial=True)
-    serializer.is_valid(raise_exception=True)
-    serializer.save()
-    return Response(status=status.HTTP_205_RESET_CONTENT)
+    serializer_class = TopicCommentSerializer
+    create_comment_serializer = TopicCommentSerializer
+    filter_backends = [OrderingFilter]
+    # filterset_class = TopicCommentFilter
+    ordering_fields = ['created_at']
+    ordering = ['created_at']
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
-@api_view(['PATCH'])
-def topic_comment_archive(request, section_pk, topic_pk, comment_id):
-    """
-    for authenticated user
-    """
-    topic = Topic.objects.get()
-    return Response({})
+    def filter_queryset(self, queryset):
+        for backend in self.filter_backends:
+            queryset = backend().filter_queryset(self.request, queryset, view=self)
 
+        return queryset
 
-@api_view(['PATCH'])
-def topic_comment_block(request, section_pk, topic_pk, comment_id):
-    """
-    for moderator or admin
-    """
-    queryset = Topic.objects
-    topic = get_object_or_404(queryset, pk=topic_pk)
-    serializer = TopicSerializer(topic)
-    return Response(data=serializer.data, status=status.HTTP_200_OK)
+    def list(self, request, section_pk=None, topic_pk=None, pk=None):
+        comments = self.queryset.filter(topic_id=topic_pk)
+        serializer = self.serializer_class(self.filter_queryset(comments), 
+                                           many=True, 
+                                           context={"request": request})
+
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    def create(self, request, section_pk=None, topic_pk=None):
+        data = request.data + {"user": request.user}
+        
+        serializer = self.create_comment_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def partial_update(self, request, section_pk=None, pk=None):
+        task = get_object_or_404(self.queryset, pk=pk)
+        if task.user == request.user:
+            update_data = {"content": request.data.get("content")}
+            serializer = self.serializer_class(task, data=update_data, partial=True)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(status=status.HTTP_205_RESET_CONTENT)
+        else:
+            ctx = {
+                "error": {
+                    "code": 1,
+                    "message": "this comment doesn't belong to this user"
+                }
+            }
+            return Response(data=ctx, status=status.HTTP_403_FORBIDDEN)
+
+    @action(detail=True, methods=['patch'])
+    def archive(self, request, section_pk=None, topic_pk=None, pk=None):
+        topic = get_object_or_404(self.queryset, pk=topic_pk)
+        topic.is_archived = True
+        topic.save()
+        return Response(status=status.HTTP_205_RESET_CONTENT)
+
+    @action(detail=True, methods=['patch'])
+    def block(self, request, section_pk=None, topic_pk=None, pk=None):
+        topic = get_object_or_404(self.queryset, pk=topic_pk)
+        topic.is_blocked = True
+        topic.save()
+        return Response(status=status.HTTP_205_RESET_CONTENT)
