@@ -9,6 +9,7 @@
     })
 </script>
 
+<Navbar/>
 {#await userResponse}
     <h3>Getting user...</h3>
 {:then user} 

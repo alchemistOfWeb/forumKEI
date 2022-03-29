@@ -20,9 +20,24 @@
             </form>
 
             <div class="text-end">
-            <button type="button" class="btn btn-outline-light me-2">Login</button>
-            <button type="button" class="btn btn-warning">Sign-up</button>
+            <a href="/signin" use:link type="button" 
+            class="btn btn-outline-light me-2 text-decoration-none"
+            role="button" id="signin-btn">Login</a>
+            <a href="/signup" use:link type="button" 
+            class="btn btn-warning text-decoration-none" 
+            role="button">Sign-up</a>
             </div>
         </div>
     </div>
 </header>
+
+<style>
+    #signin-btn {
+        text-decoration: none;
+        color: white;
+    }
+    #signin-btn:hover {
+        color: rgb(26, 25, 25);
+    }
+
+</style>

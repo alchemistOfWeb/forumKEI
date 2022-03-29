@@ -33,9 +33,9 @@
                     <div class="fw-bold">
                         <a class="text-success" href="/{section.id}/topics" use:link>{section.title}</a>
                     </div>
-                    section_id: {section.id}
+                    section_id: {section.id} <span class="text-secondary">last comment...</span>
                 </div>
-                <span class="badge bg-primary rounded-pill">14</span>
+                <span class="badge bg-primary rounded-pill">{section.total_topics}</span>
             </li>
         {/each}
         </ol>
@@ -44,4 +44,5 @@
         <h3 class="text-danger">Request error</h3>
         <hr>
     {/await}
+
 </main>
