@@ -1,5 +1,5 @@
 from unicodedata import name
-from django.urls import path
+from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import TopicViewSet, TopicCommentViewSet, section_list
 
@@ -19,4 +19,7 @@ urlpatterns = [
     path('sections/', section_list, name='section_list'), # get
     # path('signin/', views.signin, name='signin'), # post
     # path('signup/', views.signup, name='signup'), # post
+    path('auth/', include('djoser.urls')),
+    path('auth/', include('djoser.urls.authtoken')),
+    path('auth/', include('djoser.urls.jwt')),
 ] + router.urls

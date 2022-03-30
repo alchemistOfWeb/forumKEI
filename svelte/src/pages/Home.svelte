@@ -1,23 +1,31 @@
 <script context="module">
-    import { BACKEND_ROOT_URL } from './Components/Global.svelte';
+    import { BACKEND_ROOT_URL, getCookie } from './Components/Global.svelte';
     import Navbar from './Components/Navbar.svelte';
     import { link } from "svelte-spa-router";
     // export let section = 1;
     // let page = 1;
 
-    async function sectionsResponse(){
+    async function sectionsResponse() {
+        const authtoken = getCookie('auth_token');
+        let headers = {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json',
+        };
+
+        if (authtoken) {
+            console.log({authtoken})
+            headers['Authorization'] = `Token ${getCookie('auth_token')}`;
+        }
+
         return await fetch(BACKEND_ROOT_URL + `sections/`, {
             method: 'GET',
-            headers: {
-                'Accept': 'application/json, text/plain, */*',
-                'Content-Type': 'application/json',
-            }
+            headers
         })
         .then(response => response.json());
     }
 </script>
 <!-- <h1>Home</h1> -->
-<Navbar/>
+<Navbar />
 <main class="container mt-3">
 
     {#await sectionsResponse()}

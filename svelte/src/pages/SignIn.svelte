@@ -1,34 +1,100 @@
 <script>
-    import { BACKEND_ROOT_URL } from './Components/Global.svelte';
+    import { BACKEND_ROOT_URL, getCookie } from './Components/Global.svelte';
     import Navbar from './Components/Navbar.svelte';
     import { link } from "svelte-spa-router";
-    export let params = {};
+    import jquery from "jquery";
 
-    console.log(params);
 
-    // async function topicsResponse(section){
-    //     return await fetch(BACKEND_ROOT_URL + `sections/${section}/topics/`, {
-    //         method: 'GET',
-    //         headers: {
-    //             'Accept': 'application/json, text/plain, */*',
-    //             'Content-Type': 'application/json',
-    //         }
-    //     })
-    //     .then(response => response.json());
-    // }
+    // export let params = {};
+    
+    if (getCookie('access')) window.location.href = '/';
+
+    let inputErrors = {
+        inputUsername: [],
+        inputPassword: [],
+    }
+
+    function eraseErrors() {
+        jquery('.error-list').html('');
+    }
+
+    function drawErrors() {
+        for (var key in inputErrors) {
+            if (inputErrors.hasOwnProperty(key)) {
+                let errorEls = [];
+                
+                inputErrors[key].forEach(msg => {
+                    console.log({msg});
+                    let errEl = jquery('<span>');
+                    errEl.addClass('text-danger');
+                    errEl.html(msg);
+                    errorEls.push(errEl);
+                });
+                inputErrors[key] = [];
+
+                jquery(`#${key}+.error-list`).append(...errorEls);
+            }
+        }
+        setTimeout(eraseErrors, 3000);
+    }
+
+    function handleSigninBtn() {
+        const username = jquery('#inputUsername').val();
+        const password = jquery('#inputPassword').val();
+        
+        if (!username || !password) {
+            // console.log('password field is empty');
+            // inputErrors.inputPassword.push('password field is empty');
+            return;
+        }
+        console.log({username, password});
+        let data = {username, password};
+        
+        signinResponse(data)
+            .then((res)=>{
+                console.log(res);
+                if (res.access) {
+                    document.cookie = setCookie(access, res.access);
+                    document.cookie = setCookie(refresh, res.refresh);
+                }
+            })
+            .catch((err) => {
+                console.log({err});
+            });
+    }
+
+    // jquery('#signin-submit').on('click', (e)=>{
+        
+    // });
+
+    async function signinResponse(data){
+        console.log('hello');
+        return await fetch(BACKEND_ROOT_URL + `auth/jwt/create/`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: data.username,
+                password: data.password,
+            })
+        })
+        .then(response => response.json());
+    }
 </script>
 
 <Navbar/>
 <main class="container mt-3 d-flex justify-content-center">
-    <form class="col-6 col-sm-4">
+    <form class="col-6 col-sm-4" on:submit={()=>false}>
         <h1 class="h3 mb-3 font-weight-normal text-center">Please sign in</h1>
         <div class="mb-3">
-            <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="">
-            <!-- <label for="inputEmail">Email address</label> -->
+            <input type="text" id="inputUsername" class="form-control" placeholder="Username" required autofocus="">
+            <div class="error-list d-flex flex-column"></div>
         </div>
         <div class="mb-3">
-            <input type="password" id="inputPassword" class="form-control" placeholder="Password" required="">
-            <!-- <label for="inputPassword">Password</label> -->
+            <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+            <div class="error-list d-flex flex-column"></div>
         </div>
         <div class="checkbox mb-3">
           <label>
@@ -37,8 +103,8 @@
         </div>
         <p>Have not registered yet? You can do this now - <a href="/signup" use:link>signup</a></p>
         <div class="d-flex justify-content-center">
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+            <button class="btn btn-lg btn-primary" id="signin-submit" on:click={handleSigninBtn}>Sign in</button>
         </div>
         <p class="mt-5 mb-3 text-muted">© 1917-2022</p>
-      </form>  
+    </form>  
 </main>

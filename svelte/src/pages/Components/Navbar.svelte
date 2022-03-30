@@ -1,6 +1,43 @@
 <script>
     import { link } from "svelte-spa-router";
-    
+    import { getContext, setContext } from 'svelte';
+    import { getCookie, setCookie, deleteCookie } from './Global.svelte';
+
+    // let username = getCookie('username');
+
+    // setContext('user', {username: 'Ivan'});
+    export let user = getContext('user');
+
+    // async function logoutResponse() {
+    //     const authtoken = getCookie('auth_token');
+    //     let headers = {
+    //         'Accept': 'application/json, text/plain, */*',
+    //         'Content-Type': 'application/json',
+    //     };
+
+    //     if (authtoken) {
+    //         headers['Authorization'] = `Barear ${getCookie('auth_token')}`;
+    //     } else {
+    //         return alert('You are not authorized now');
+    //     }
+
+    //     return await fetch(BACKEND_ROOT_URL + `auth/token/logout/`, {
+    //         method: 'POST',
+    //         headers
+    //     })
+    //     .then(response => response.json())
+    //     .then((d) => {
+    //         window.location.href = '/';
+    //     });
+    // }
+
+    function handleLogout() {
+        if (confirm('Do you really want to logout?')) {
+            // logoutResponse();
+            setContext('user', null);
+            deleteCookie('auth_token');
+        }
+    }
 </script>
 <header class="p-3 bg-dark text-white">
     <div class="container">
@@ -20,23 +57,32 @@
             </form>
 
             <div class="text-end">
-            <a href="/signin" use:link type="button" 
-            class="btn btn-outline-light me-2 text-decoration-none"
-            role="button" id="signin-btn">Login</a>
-            <a href="/signup" use:link type="button" 
-            class="btn btn-warning text-decoration-none" 
-            role="button">Sign-up</a>
+                {#if (user)}
+                    <a href="/personal" type="button" 
+                    class="btn btn-outline-light me-2 text-decoration-none btn-dark-light"
+                    role="button" id="personal-btn" use:link>profile</a>
+                    <a href="#logout" type="button" 
+                    class="btn btn-warning text-dark text-decoration-none"
+                    role="button" id="logout-btn" on:click={handleLogout}>Logout</a>
+                {:else}
+                    <a href="/signin" use:link type="button" 
+                    class="btn btn-outline-light me-2 text-decoration-none btn-dark-light"
+                    role="button" id="signin-btn">Login</a>
+                    <a href="/signup" use:link type="button" 
+                    class="btn btn-warning text-dark text-decoration-none" 
+                    role="button">Signup</a>
+                {/if}
             </div>
         </div>
     </div>
 </header>
 
 <style>
-    #signin-btn {
+    .btn-dark-light {
         text-decoration: none;
         color: white;
     }
-    #signin-btn:hover {
+    .btn-dark-light:hover {
         color: rgb(26, 25, 25);
     }
 

@@ -1,7 +1,10 @@
 <script>
 	import jquery from 'jquery';
+	// import { getCookie } from './Components/Global.svelte';
 	import Router, { link } from "svelte-spa-router";
 	import { routes } from "./routes.js";
+	// import { setContext } from "svelte";
+
 </script>
   
 <Router {routes}/>

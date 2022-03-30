@@ -1,5 +1,5 @@
 <script>
-    import { BACKEND_ROOT_URL } from './Components/Global.svelte';
+    import { BACKEND_ROOT_URL, getCookie } from './Components/Global.svelte';
     import Navbar from './Components/Navbar.svelte';
     import { link } from "svelte-spa-router";
     export let params = {};
@@ -8,12 +8,20 @@
     let page = 1;
 
     async function topicsResponse(section){
+        const authtoken = getCookie('auth_token');
+        let headers = {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json',
+        };
+        
+        if (authtoken) {
+            console.log({authtoken})
+            headers['Authorization'] = `Bearer ${getCookie('auth_token')}`;
+        }
+        
         return await fetch(BACKEND_ROOT_URL + `sections/${section}/topics/`, {
             method: 'GET',
-            headers: {
-                'Accept': 'application/json, text/plain, */*',
-                'Content-Type': 'application/json',
-            }
+            headers
         })
         .then(response => response.json());
     }
