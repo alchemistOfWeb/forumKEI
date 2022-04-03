@@ -3,39 +3,13 @@
     import { getContext, setContext } from 'svelte';
     import { getCookie, setCookie, deleteCookie } from './Global.svelte';
 
-    // let username = getCookie('username');
-
-    // setContext('user', {username: 'Ivan'});
-    export let user = getContext('user');
-
-    // async function logoutResponse() {
-    //     const authtoken = getCookie('auth_token');
-    //     let headers = {
-    //         'Accept': 'application/json, text/plain, */*',
-    //         'Content-Type': 'application/json',
-    //     };
-
-    //     if (authtoken) {
-    //         headers['Authorization'] = `Barear ${getCookie('auth_token')}`;
-    //     } else {
-    //         return alert('You are not authorized now');
-    //     }
-
-    //     return await fetch(BACKEND_ROOT_URL + `auth/token/logout/`, {
-    //         method: 'POST',
-    //         headers
-    //     })
-    //     .then(response => response.json())
-    //     .then((d) => {
-    //         window.location.href = '/';
-    //     });
-    // }
-
     function handleLogout() {
         if (confirm('Do you really want to logout?')) {
             // logoutResponse();
-            setContext('user', null);
-            deleteCookie('auth_token');
+            window.user = undefined;
+            window.location.href = '/';
+            deleteCookie('access');
+            deleteCookie('refresh');
         }
     }
 </script>
@@ -57,7 +31,7 @@
             </form>
 
             <div class="text-end">
-                {#if (user)}
+                {#if (window.user)}
                     <a href="/personal" type="button" 
                     class="btn btn-outline-light me-2 text-decoration-none btn-dark-light"
                     role="button" id="personal-btn" use:link>profile</a>

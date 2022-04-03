@@ -2,6 +2,11 @@ from rest_framework import serializers
 from .models import Topic, TopicComment, Section, Profile
 from django.db.models import Count
 
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = '__all__'
+
 class SectionSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):

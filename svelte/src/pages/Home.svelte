@@ -2,11 +2,18 @@
     import { BACKEND_ROOT_URL, getCookie } from './Components/Global.svelte';
     import Navbar from './Components/Navbar.svelte';
     import { link } from "svelte-spa-router";
+    import { getContext, setContext } from 'svelte';
+    import jquery from 'jquery';
     // export let section = 1;
     // let page = 1;
+    
+    jquery(document).on('domContentLoaded')
+    document.addEventListener('DOMContentLoaded', ()=>{
+        console.log(window.user);
+    })
 
     async function sectionsResponse() {
-        const authtoken = getCookie('auth_token');
+        const authtoken = getCookie('access');
         let headers = {
             'Accept': 'application/json, text/plain, */*',
             'Content-Type': 'application/json',
@@ -14,7 +21,7 @@
 
         if (authtoken) {
             console.log({authtoken})
-            headers['Authorization'] = `Token ${getCookie('auth_token')}`;
+            headers['Authorization'] = `Bearer ${authtoken}`;
         }
 
         return await fetch(BACKEND_ROOT_URL + `sections/`, {

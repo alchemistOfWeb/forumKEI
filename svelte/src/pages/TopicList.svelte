@@ -8,7 +8,7 @@
     let page = 1;
 
     async function topicsResponse(section){
-        const authtoken = getCookie('auth_token');
+        const authtoken = getCookie('access');
         let headers = {
             'Accept': 'application/json, text/plain, */*',
             'Content-Type': 'application/json',
@@ -16,7 +16,7 @@
         
         if (authtoken) {
             console.log({authtoken})
-            headers['Authorization'] = `Bearer ${getCookie('auth_token')}`;
+            headers['Authorization'] = `Bearer ${getCookie('access')}`;
         }
         
         return await fetch(BACKEND_ROOT_URL + `sections/${section}/topics/`, {

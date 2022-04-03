@@ -1,7 +1,7 @@
 from unicodedata import name
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import TopicViewSet, TopicCommentViewSet, section_list
+from .views import TopicViewSet, TopicCommentViewSet, section_list, current_profile
 
 
 router = DefaultRouter()
@@ -15,7 +15,7 @@ router.register(r'sections/(?P<section_pk>\d+)/topics/(?P<topic_pk>\d+)/comments
 
 urlpatterns = [
     # path('profile_block/', views.profile_block, name='profile_block'), # post
-    # path('profile/', views.profile, name='profile'), # get|patch|delete
+    path('profile/', current_profile, name='profile'), # get|patch|delete
     path('sections/', section_list, name='section_list'), # get
     # path('signin/', views.signin, name='signin'), # post
     # path('signup/', views.signup, name='signup'), # post

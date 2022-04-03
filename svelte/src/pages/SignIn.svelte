@@ -1,7 +1,7 @@
 <script>
-    import { BACKEND_ROOT_URL, getCookie } from './Components/Global.svelte';
+    import { BACKEND_ROOT_URL, getCookie, setCookie } from './Components/Global.svelte';
     import Navbar from './Components/Navbar.svelte';
-    import { link } from "svelte-spa-router";
+    import { link, replace } from "svelte-spa-router";
     import jquery from "jquery";
 
 
@@ -53,9 +53,11 @@
         signinResponse(data)
             .then((res)=>{
                 console.log(res);
+                console.log(res.access);
                 if (res.access) {
-                    document.cookie = setCookie(access, res.access);
-                    document.cookie = setCookie(refresh, res.refresh);
+                    setCookie('access', res.access);
+                    setCookie('refresh', res.refresh);
+                    window.location.href = '/';
                 }
             })
             .catch((err) => {
@@ -63,12 +65,8 @@
             });
     }
 
-    // jquery('#signin-submit').on('click', (e)=>{
-        
-    // });
-
     async function signinResponse(data){
-        console.log('hello');
+        console.log('signinResponse...');
         return await fetch(BACKEND_ROOT_URL + `auth/jwt/create/`, {
             method: 'POST',
             headers: {
@@ -103,7 +101,7 @@
         </div>
         <p>Have not registered yet? You can do this now - <a href="/signup" use:link>signup</a></p>
         <div class="d-flex justify-content-center">
-            <button class="btn btn-lg btn-primary" id="signin-submit" on:click={handleSigninBtn}>Sign in</button>
+            <button class="btn btn-lg btn-primary btn-block" id="signin-submit" on:click={handleSigninBtn}>Sign in</button>
         </div>
         <p class="mt-5 mb-3 text-muted">© 1917-2022</p>
     </form>  

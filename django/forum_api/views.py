@@ -9,7 +9,10 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status, permissions, generics
 from rest_framework.views import APIView
 from .models import Topic, TopicComment, Section, Profile
-from .serializers import TopicSerializer, TopicCommentSerializer, SectionSerializer
+from .serializers import (TopicSerializer, 
+                          TopicCommentSerializer, 
+                          SectionSerializer, 
+                          ProfileSerializer)
 from .filters import TopicFilter
 
 
@@ -20,6 +23,16 @@ from .filters import TopicFilter
 #     get_object_or_404(Profile.objects, user=user_pk)
 #     data = {"message": "user blocked", "errors": []}
 #     return Response(data, status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['GET'])
+def current_profile(request):
+    print(request.COOKIES) 
+    profile = request.user.profile
+
+    # profile = get_object_or_404(Profile.objects, request.user.id)
+    serializer = ProfileSerializer(profile)
+    return Response(serializer.data)
 
 
 # ----------- SECTIONS ----------- #
