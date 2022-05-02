@@ -166,7 +166,6 @@ pipenv run python manage.py runserver
 
 Нового пользователя может создать только админ. Вход стандартный из коробки django
 
-
 ### пользователи
 <a name="users"></a> 
 

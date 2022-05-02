@@ -115,23 +115,17 @@ class TopicCommentViewSet(viewsets.ViewSet):
     ordering = ['created_at']
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-
-    def filter_queryset(self, queryset):
-        for backend in self.filter_backends:
-            queryset = backend().filter_queryset(self.request, queryset, view=self)
-
-        return queryset
-
     def list(self, request, section_pk=None, topic_pk=None, pk=None):
+        topic = Topic.objects.get(pk=topic_pk)
+        topic_serializer = TopicSerializer(topic)
         comments = self.queryset.filter(topic_id=topic_pk)
-        serializer = self.serializer_class(self.filter_queryset(comments), 
-                                           many=True, 
-                                           context={"request": request})
+        comment_serializer = self.serializer_class(comments, many=True)
+        ctx = {"topic": topic_serializer.data, "comments": comment_serializer.data}
 
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
+        return Response(data=ctx, status=status.HTTP_200_OK)    
 
     def create(self, request, section_pk=None, topic_pk=None):
-        data = request.data + {"user": request.user}
+        data = request.data + {"user": request.user, "topic_id": topic_pk}
         
         serializer = self.create_comment_serializer(data=data)
         serializer.is_valid(raise_exception=True)

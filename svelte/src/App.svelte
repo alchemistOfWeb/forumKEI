@@ -71,6 +71,12 @@
 	:global(body) {
 		margin: 0px;
 		padding: 0px;
+		background-image: url(images/forum.jpg);
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: contain;
+		background-attachment: fixed;
+		background-blend-mode: darken;
 	}
 	
 	/* :global(a) {
