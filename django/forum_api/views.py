@@ -65,7 +65,7 @@ class TopicViewSet(viewsets.ViewSet):
     def list(self, request, section_pk=None):
         topics = self.queryset.filter(section=section_pk)
         serializer = self.serializer_class(self.filter_queryset(topics), many=True)
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
+        return Response(data={'topics': serializer.data}, status=status.HTTP_200_OK)
 
     def create(self, request, section_pk=None):
         data = request.data
