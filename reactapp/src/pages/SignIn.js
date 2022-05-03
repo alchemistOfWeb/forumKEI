@@ -1,6 +1,9 @@
-import { crdRequest } from "../functions";
-import Link from "react-router-dom";
-import useState from "react";
+import { crdRequest, getCookie, setCookie } from "../functions";
+import { Link } from "react-router-dom";
+import { useState } from "react";
+import { BACKEND_ROOT_URL } from "../setting";
+import React from "react";
+import jquery from "jquery";
 
 
 let inputErrors = {
@@ -61,8 +64,7 @@ export default function SignIn() {
                 console.log(res);
                 console.log(res.access);
                 if (res.access) {
-                    setCookie('access', res.access);
-                    setCookie('refresh', res.refresh);
+                    setCookie('access_token', res.access);
                     window.location.href = '/';
                 }
             })

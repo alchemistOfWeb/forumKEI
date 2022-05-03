@@ -1,3 +1,5 @@
+import qs from 'qs';
+
 export function getCookie(name) {
     let matches = document.cookie.match(new RegExp(
         "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
@@ -39,7 +41,7 @@ export const getCSRFtoken = function() {
 }
 
 export async function crdRequest(method, path, data, headers={}) {
-    let headers = {
+    headers = {
         "X-CSRFToken": getCSRFtoken(),
         // "Content-Type": "application/x-www-form-urlencoded",
         "Content-Type": "application/json",
@@ -54,7 +56,7 @@ export async function request(method, path, data, headers={}) {
         headers: {
             ...headers
         },
-        body: lib.stringify({ ...data }),
+        body: qs.stringify({ ...data }),
     })
         .then((response) => {
             return response.json();

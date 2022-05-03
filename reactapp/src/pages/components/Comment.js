@@ -1,6 +1,7 @@
+import React from "react";
 
 
-function Comment(comment) {
+export default function Comment(comment) {
     return (
         <div className="card" data-comment-id={comment.id}>
             <div className="card-body">

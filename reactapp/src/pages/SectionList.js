@@ -1,4 +1,4 @@
-import BACKEND_ROOT_URL from '../setting';
+import { BACKEND_ROOT_URL } from '../setting';
 import { request, getCookie } from '../functions';
 import { useParams } from "react-router-dom";
 import React from 'react';
@@ -6,9 +6,9 @@ import { useAsync } from 'react-async';
 import Section from './components/Section';
 
 
-const loadSectionList = async (sectionId) => {
+const loadSectionList = async () => {
     let headers = {'Authorization': getCookie('access_token')};
-    let url = `${BACKEND_ROOT_URL}sections/${sectionId}/topics/`;
+    let url = `${BACKEND_ROOT_URL}sections/`;
     const res = await request('GET', url, {}, headers)
     if (!res.ok) throw new Error(res.statusText)
     return res.json()
@@ -18,7 +18,7 @@ const loadSectionList = async (sectionId) => {
 export default function SectionList() {
     let urlParams = useParams();
     const { data, error, isPending } 
-        = useAsync({ promiseFn: loadTopicList, sectionId: urlParams.topicId });
+        = useAsync({ promiseFn: loadSectionList });
 
     if (isPending) {
         return <h1>Loading sections...</h1>
@@ -34,7 +34,7 @@ export default function SectionList() {
                     sections.length > 0 
                     ?
                     sections.map(
-                        (topic, ind) => <Topic topic={topic} key={ind} />) 
+                        (section, ind) => <Section section={section} key={ind} />) 
                     :
                     "There are no sections in this section yet."
                 }

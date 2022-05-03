@@ -1,14 +1,15 @@
-import BACKEND_ROOT_URL from '../setting';
-import { request, getCookie } from '../functions';
+import { BACKEND_ROOT_URL } from "../setting";
+import { crdRequest, getCookie } from '../functions';
 import { useParams } from "react-router-dom";
 import React from 'react';
-import { useAsync } from 'react-async';
+// import { useAsync } from 'react-async';
+import { useState } from "react";
 
 
-const createTopic = async (sectionId, topicId) => {
+const createTopic = async (sectionId) => {
     let headers = {'Authorization': getCookie('access_token')};
     let url = `${BACKEND_ROOT_URL}sections/${sectionId}/topics/`;
-    const res = await request('POST', url, {}, headers);
+    const res = await crdRequest('POST', url, {}, headers);
     if (!res.ok) throw new Error(res.statusText);
     return res.json();
 }
@@ -16,39 +17,35 @@ const createTopic = async (sectionId, topicId) => {
 
 export default function TopicCreate() {
     let urlParams = useParams();
-    const { data, error, isPending } 
-        = useAsync({ promiseFn: loadTopic, topicId: urlParams.topicId });
-
-    if (isPending) {
-        return <h1>Loading...</h1>
+    const [title, setTitle] = useState('');
+    
+    const handleCreateTopic = (e) => {
+        e.preventDefault();
+        createTopic(urlParams.sectionId);
     }
-    if (error) {
-        return <h1 className="text-danger">Error</h1>
-    }
-    if (data) {
-        let comments = data.comments;
-        return (
-            <>
-                <hr/>
-                <h3>{data.topic.title}</h3>
-                <h4>{data.topic.total_comments}</h4>
-                <hr/>
 
-                <div className="container my-5 py-5">
-                    <div className="row d-flex justify-content-center">
-                        <div className="col-md-12 col-lg-10 col-xl-8">
-                            { 
-                            comments.length > 0 
-                            ?
-                            comments.map(
-                                (comment, ind) => <Comment comment={comment} key={ind} />) 
-                            :
-                            "There are no comments on this topic yet."
-                            }
-                        </div>
+    return (
+        <>
+            <main className="container mt-3 d-flex justify-content-center">
+                <form className="col-6 col-sm-4" onSubmit={handleCreateTopic}>
+                    <h1 className="h3 mb-3 font-weight-normal text-center">Creating topic</h1>
+                    <div className="mb-3">
+                        <input 
+                            type="text" 
+                            id="inputTitle" 
+                            className="form-control" 
+                            placeholder="Title" 
+                            required autofocus=""
+                            onChange={(e)=>{setTitle(e.target.value)}}
+                        />
+                        <div className="error-list d-flex flex-column"></div>
                     </div>
-                </div>
-            </>
-        );
-    }
+
+                    <div className="d-flex justify-content-center">
+                        <button type="submit" className="btn btn-lg btn-primary btn-block" id="signin-submit">Create</button>
+                    </div>
+                </form>  
+            </main>
+        </>
+    );
 }

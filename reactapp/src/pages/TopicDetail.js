@@ -1,4 +1,4 @@
-import BACKEND_ROOT_URL from '../setting';
+import { BACKEND_ROOT_URL } from "../setting";
 import { request, getCookie } from '../functions';
 import { useParams } from "react-router-dom";
 import React from 'react';

@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom"
-import { crdRequest } from "../../functions";
+import { crdRequest, getCookie, deleteCookie } from "../../functions";
+import { BACKEND_ROOT_URL } from "../../setting";
+import React from "react";
 
 
 async function logoutResponse () {
@@ -11,7 +13,7 @@ async function logoutResponse () {
 }
 
 function handleLogout() {
-    if (confirm('Do you really want to logout?')) {
+    if (window.confirm('Do you really want to logout?')) {
         logoutResponse();        
         window.user = undefined;
         window.location.href = '/';
@@ -20,16 +22,10 @@ function handleLogout() {
 }
 
 export default function Navbar() {
-    let userBtns = null;
+    let UserBtns = null;
     if (window.user) {
-        userBtns = (
+        UserBtns = () => (
             <>
-                <a href="/personal" type="button" 
-                class="btn btn-outline-light me-2 text-decoration-none btn-dark-light"
-                role="button" id="personal-btn" use:link>profile</a>
-                <a href="#logout" type="button" 
-                class="btn btn-warning text-dark text-decoration-none"
-                role="button" id="logout-btn" on:click={handleLogout}>Logout</a>
                 <Link 
                     to="/personal" 
                     role="button"
@@ -50,7 +46,7 @@ export default function Navbar() {
             </>
         )
     } else {
-        userBtns = (
+        UserBtns = () => (
             <>
                 <Link 
                     to="/signin" 
@@ -73,27 +69,27 @@ export default function Navbar() {
     }
 
     return (
-        <header class="p-3 bg-dark text-white">
-            <div class="container">
-                <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-                    <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+        <header className="p-3 bg-dark text-white">
+            <div className="container">
+                <div className="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                    <ul className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                     <li>
                         <Link to="/" className="nav-link px-2 text-secondary">Home</Link>
                     </li>
+                    {/* <li>
+                        <a href="#" className="nav-link px-2 text-white">FAQs</a>
+                    </li> */}
                     <li>
-                        <a href="#" class="nav-link px-2 text-white">FAQs</a>
-                    </li>
-                    <li>
-                        <a href="#" class="nav-link px-2 text-white">About</a>
+                        <Link to="/about" className="nav-link px-2 text-white">About</Link>
                     </li>
                     </ul>
 
-                    <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
+                    <form className="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
                     <input type="search" className="form-control form-control-dark" placeholder="Search..." aria-label="Search"/>
                     </form>
 
-                    <div class="text-end">
-                        {userBtns}
+                    <div className="text-end">
+                        <UserBtns/>
                     </div>
                 </div>
             </div>

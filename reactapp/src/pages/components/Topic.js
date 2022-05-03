@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
+import React from "react";
 
-export default function Topic(sectionId, topicId) {
+
+export default function Topic(sectionId, topic) {
     let linkToDetail = `/sections/${sectionId}/topics/${topic.id}`;
     return (
         <li className="list-group-item d-flex justify-content-between align-items-start">
