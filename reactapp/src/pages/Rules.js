@@ -9,6 +9,10 @@ export default function Rules() {
             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis cupiditate iure at aliquam, consequatur explicabo assumenda nam maiores reprehenderit nesciunt perspiciatis veniam excepturi omnis adipisci sed magni perferendis praesentium delectus!</p>
             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis cupiditate iure at aliquam, consequatur explicabo assumenda nam maiores reprehenderit nesciunt perspiciatis veniam excepturi omnis adipisci sed magni perferendis praesentium delectus!</p>
             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis cupiditate iure at aliquam, consequatur explicabo assumenda nam maiores reprehenderit nesciunt perspiciatis veniam excepturi omnis adipisci sed magni perferendis praesentium delectus!</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis cupiditate iure at aliquam, consequatur explicabo assumenda nam maiores reprehenderit nesciunt perspiciatis veniam excepturi omnis adipisci sed magni perferendis praesentium delectus!</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis cupiditate iure at aliquam, consequatur explicabo assumenda nam maiores reprehenderit nesciunt perspiciatis veniam excepturi omnis adipisci sed magni perferendis praesentium delectus!</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis cupiditate iure at aliquam, consequatur explicabo assumenda nam maiores reprehenderit nesciunt perspiciatis veniam excepturi omnis adipisci sed magni perferendis praesentium delectus!</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis cupiditate iure at aliquam, consequatur explicabo assumenda nam maiores reprehenderit nesciunt perspiciatis veniam excepturi omnis adipisci sed magni perferendis praesentium delectus!</p>
         </>
     )
 }

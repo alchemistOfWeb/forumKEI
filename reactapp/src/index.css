@@ -20,3 +20,41 @@ code {
 .btn-dark-light:hover {
   color: rgb(26, 25, 25);
 }
+
+.main-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  background-blend-mode: darken;
+  background-color: rgba(19, 19, 19, 0.728);
+  background-image: url(images/forum.jpg);
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+.main-wrapper .list-group-item {
+  background-color: #666f7091;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  border-radius: 13px;
+}
+
+.main-wrapper .list-group-item:hover {
+  background-color: #7e8c8e91;
+}
+
+.content-section {
+  color: aliceblue;
+  text-shadow: 0 0 10px #999494;
+}
+
+/* .forum-background {
+  width: 100vw;
+  min-height: 100vh;
+  position: absolute;
+  background-image: url(images/forum.jpg);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat; 
+} */
