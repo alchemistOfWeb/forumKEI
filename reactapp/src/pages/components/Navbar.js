@@ -76,11 +76,14 @@ export default function Navbar() {
                     <li>
                         <Link to="/" className="nav-link px-2 text-secondary">Home</Link>
                     </li>
-                    {/* <li>
-                        <a href="#" className="nav-link px-2 text-white">FAQs</a>
-                    </li> */}
+                    <li>
+                        <Link to="/sections" className="nav-link px-2 text-white">Sections</Link>
+                    </li>
                     <li>
                         <Link to="/about" className="nav-link px-2 text-white">About</Link>
+                    </li>
+                    <li>
+                        <Link to="/rules" className="nav-link px-2 text-white">Rules</Link>
                     </li>
                     </ul>
 

@@ -15,6 +15,7 @@ import TopicList from './pages/TopicList';
 import TopicCreate from './pages/TopicCreate';
 import TopicDetail from './pages/TopicDetail';
 import Profile from './pages/Profile';
+import Rules from './pages/Rules';
 
 import NoPage from './pages/NoPage';
 
@@ -27,6 +28,7 @@ export default function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="about" element={<About />} />
+          <Route path="rules" element={<Rules />} />
           <Route path="signin" element={<SignIn />} />
           <Route path="signup" element={<SignUp />} />
           <Route path="profile" element={<Profile />} />

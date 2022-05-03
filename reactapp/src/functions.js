@@ -50,14 +50,17 @@ export async function crdRequest(method, path, data, headers={}) {
     return await request(method, path, data, headers)
 }
 
-export async function request(method, path, data, headers={}) {
-    return await fetch(path, {
+export async function request(method, path, data, headers={}, options={}) {
+    let params = {
         method: method,
-        headers: {
-            ...headers
-        },
-        body: qs.stringify({ ...data }),
-    })
+        ...options,
+    }
+    if (data.length > 0) {
+        console.log(data)
+        params.body = qs.stringify({ ...data });
+    }
+    if (headers.length > 0) params.headers = headers;
+    return await fetch(path, params)
         .then((response) => {
             return response.json();
         })

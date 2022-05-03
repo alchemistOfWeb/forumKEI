@@ -40,7 +40,7 @@ def current_profile(request):
 def section_list(request):
     sections = Section.objects.all()
     serializer = SectionSerializer(sections, many=True)
-    return Response(serializer.data)
+    return Response({'sections': serializer.data})
 
 
 # ----------- TOPICS ----------- #
