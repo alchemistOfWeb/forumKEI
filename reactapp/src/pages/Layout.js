@@ -21,7 +21,7 @@ const Layout = () => {
     }
     if (data) { 
         console.log({user: data});
-        window.user = data
+        window.user = data.user;
     }
     
     return (

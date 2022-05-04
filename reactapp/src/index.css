@@ -40,6 +40,16 @@ code {
   border-radius: 13px;
 }
 
+.list-group-item.list-section-item a {
+  text-decoration: none;
+}
+.wrappering-link {
+  text-decoration: none;
+}
+.actions-bar a {
+  margin-right: 5px;
+}
+
 .main-wrapper .list-group-item.list-section-item:hover {
   background-color: #7e8c8e91;
 }
@@ -71,6 +81,10 @@ code {
   background-size: cover;
   background-repeat: no-repeat; 
 } */
+
+.profile-section {
+  background-color: #68839747;
+}
 
 .profile-section .form-control:focus {
   box-shadow: none;

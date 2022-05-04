@@ -116,7 +116,7 @@ export function getAccessToken() {
 }
 
 export async function userRequest(options={}) {
-    let url = `${BACKEND_ROOT_URL}auth/users/me/`;
+    let url = `${BACKEND_ROOT_URL}profile/`;
     let headers = {
         // "Content-Type": "application/json",
         "Authorization": getAccessToken()

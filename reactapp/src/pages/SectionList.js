@@ -31,7 +31,7 @@ export default function SectionList() {
     if (data) {
         let sections = data.sections;
         return (
-            <ol className="list-group list-group-numbered">
+            <ol className="list-group">
                 { 
                     sections.length > 0 
                     ?

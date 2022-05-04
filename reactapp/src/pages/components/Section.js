@@ -6,16 +6,31 @@ export default function Section({section}) {
     let linkToDetail = `/sections/${section.id}/topics`;
 
     return (
-        <li className="list-group-item list-section-item d-flex justify-content-between align-items-start">
-            <div className="ms-2 me-auto">
-                <div className="fw-bold">
-                    <Link className="text-success" to={linkToDetail}>
-                        {section.title}
-                    </Link>
+        <Link className="wrappering-link" to={linkToDetail}>
+            <li className="list-group-item list-section-item">
+                <div className="d-flex justify-content-between align-items-start">
+                    <div className="">
+                        <div className="fw-bold text-light">
+                            {/* <Link className="text-light" to={linkToDetail}> */}
+                                {section.title}
+                            {/* </Link> */}
+                        </div>
+                        {/* <div className="" title='last comment'>
+                            <span>
+                                {dj.format('DD-MM-YYYY HH:mm')}
+                            </span>
+                        </div> */}
+                        {/* blocked: {topic.is_blocked} */}
+                    </div>
+                    <div>
+                        <div>
+                            <span className="badge bg-primary rounded-pill">
+                                {section.total_topics} topics
+                            </span>                        
+                        </div>
+                    </div>
                 </div>
-                section_id: {section.id} <span className="text-secondary">last comment...</span>
-            </div>
-            <span className="badge bg-primary rounded-pill">{section.total_topics} topics</span>
-        </li>        
+            </li>        
+        </Link>
     )
 }

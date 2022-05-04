@@ -1,10 +1,9 @@
 import { BACKEND_ROOT_URL } from "../setting";
 import { request, getCookie } from '../functions';
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import React from 'react';
 import { useAsync } from 'react-async';
 import Topic from './components/Topic'
-
 
 const loadTopicList = async ({sectionId}, options) => {
     let headers = {'Authorization': getCookie('access_token')};
@@ -35,7 +34,19 @@ export default function TopicList() {
         return (
             <>
                 <h1>Topics for {section.title}</h1>
-                <ol className="list-group list-group-numbered">
+                <hr/>
+                <div className="d-flex actions-bar">
+                    <Link className="btn btn-secondary" to="/sections" role="button">back</Link>
+                    <Link 
+                        className="btn btn-success" 
+                        to={`/sections/${urlParams.sectionId}/topics/create`} 
+                        role="button"
+                    >
+                            Add new
+                    </Link>
+                </div>
+                <hr/>
+                <ol className="list-group">
                     { 
                         topics.length > 0 
                         ?

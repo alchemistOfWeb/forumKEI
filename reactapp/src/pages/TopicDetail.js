@@ -1,6 +1,6 @@
 import { BACKEND_ROOT_URL } from "../setting";
 import { request, getCookie } from '../functions';
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import React from 'react';
 import { useAsync } from 'react-async';
 import Comment from './components/Comment'
@@ -36,9 +36,37 @@ export default function TopicDetail() {
         const topic = data.topic;
         return (
             <>
-                <hr/>
                 <h3>Disscusing on {topic.title}</h3>
                 <h4>Comments count: {topic.total_comments}</h4>
+                <hr/>
+                <div className="row actions-bar">
+                    <div className="col-1">
+                        <Link 
+                            className="btn btn-secondary" 
+                            to={`/sections/${urlParams.sectionId}/topics`} 
+                            role="button"
+                        >
+                            back
+                        </Link>
+
+                    </div>
+                    <div className="col-11 d-flex justify-content-end">
+                        <Link 
+                            className="btn btn-success" 
+                            to={`/sections/${urlParams.sectionId}/topics/create`} 
+                            role="button"
+                        >
+                            Edit
+                        </Link>
+                        <Link 
+                            className="btn btn-danger" 
+                            to={`/sections/${urlParams.sectionId}/topics/create`} 
+                            role="button"
+                        >
+                            Archive
+                        </Link>
+                    </div>
+                </div>
                 <hr/>
 
                 <ul className="list-group comment-list">
