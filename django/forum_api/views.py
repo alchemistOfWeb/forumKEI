@@ -76,7 +76,7 @@ class TopicViewSet(viewsets.ViewSet):
         return Response(data=ctx, status=status.HTTP_200_OK)
 
     def create(self, request, section_pk=None):
-        data = request.data
+        data = {**request.data, 'section': section_pk}
         serializer = self.serializer_class(data=data)
         serializer.is_valid(raise_exception=True)
         serializer.save()

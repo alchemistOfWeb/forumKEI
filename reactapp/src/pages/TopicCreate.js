@@ -1,17 +1,16 @@
 import { BACKEND_ROOT_URL } from "../setting";
-import { crdRequest, getCookie } from '../functions';
-import { useParams } from "react-router-dom";
+import { crdRequest, getAccessToken } from '../functions';
+import { useParams, Link } from "react-router-dom";
 import React from 'react';
 // import { useAsync } from 'react-async';
 import { useState } from "react";
 
 
-const createTopic = async (sectionId) => {
-    let headers = {'Authorization': getCookie('access_token')};
+const createTopic = async (sectionId, data) => {
+    let headers = {'Authorization': getAccessToken()};
     let url = `${BACKEND_ROOT_URL}sections/${sectionId}/topics/`;
-    const res = await crdRequest('POST', url, {}, headers);
-    if (!res.ok) throw new Error(res.statusText);
-    return res.json();
+    const res = await crdRequest('POST', url, data, headers);
+    return res;
 }
 
 
@@ -21,11 +20,31 @@ export default function TopicCreate() {
     
     const handleCreateTopic = (e) => {
         e.preventDefault();
-        createTopic(urlParams.sectionId);
+        if (title.length < 4) return;
+        createTopic(urlParams.sectionId, {title})
+            .then((topic)=>{  
+                console.log({topic});
+                if (topic.id) {
+                    window.location.href = `/sections/${urlParams.sectionId}/topics/${topic.id}`;
+                }
+            });
     }
 
     return (
         <>
+            <hr/>
+            <div className="row actions-bar">
+                <div className="col-1">
+                    <Link 
+                        className="btn btn-secondary" 
+                        to={`/sections/${urlParams.sectionId}/topics`} 
+                        role="button"
+                    >
+                        back
+                    </Link>
+                </div>
+            </div>
+            <hr/>
             <main className="container mt-3 d-flex justify-content-center">
                 <form className="col-6 col-sm-4" onSubmit={handleCreateTopic}>
                     <h1 className="h3 mb-3 font-weight-normal text-center">Creating topic</h1>
