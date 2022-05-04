@@ -12,8 +12,11 @@ from .models import Topic, TopicComment, Section, Profile
 from .serializers import (TopicSerializer, 
                           TopicCommentSerializer, 
                           SectionSerializer, 
-                          ProfileSerializer)
+                          ProfileSerializer, UserSerializer)
 from .filters import TopicFilter
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.middleware.csrf import get_token
 
 
 # class SectionListView(APIView)
@@ -24,15 +27,17 @@ from .filters import TopicFilter
 #     data = {"message": "user blocked", "errors": []}
 #     return Response(data, status=status.HTTP_204_NO_CONTENT)
 
+@api_view(['GET'])
+def csrf(request):
+    return Response({'csrfToken': get_token(request)})
+
 
 @api_view(['GET'])
 def current_profile(request):
     print(request.COOKIES) 
-    profile = request.user.profile
-
     # profile = get_object_or_404(Profile.objects, request.user.id)
-    serializer = ProfileSerializer(profile)
-    return Response(serializer.data)
+    serializer = UserSerializer(request.user)
+    return Response({'user': serializer.data})
 
 
 # ----------- SECTIONS ----------- #
@@ -65,7 +70,10 @@ class TopicViewSet(viewsets.ViewSet):
     def list(self, request, section_pk=None):
         topics = self.queryset.filter(section=section_pk)
         serializer = self.serializer_class(self.filter_queryset(topics), many=True)
-        return Response(data={'topics': serializer.data}, status=status.HTTP_200_OK)
+        section = Section.objects.get(pk=section_pk)
+        serialized_section = SectionSerializer(section, many=False)
+        ctx = {'topics': serializer.data, 'section': serialized_section.data}
+        return Response(data=ctx, status=status.HTTP_200_OK)
 
     def create(self, request, section_pk=None):
         data = request.data
@@ -115,6 +123,7 @@ class TopicCommentViewSet(viewsets.ViewSet):
     ordering = ['created_at']
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+    @method_decorator(ensure_csrf_cookie)
     def list(self, request, section_pk=None, topic_pk=None, pk=None):
         topic = Topic.objects.get(pk=topic_pk)
         topic_serializer = TopicSerializer(topic)
@@ -122,7 +131,7 @@ class TopicCommentViewSet(viewsets.ViewSet):
         comment_serializer = self.serializer_class(comments, many=True)
         ctx = {"topic": topic_serializer.data, "comments": comment_serializer.data}
 
-        return Response(data=ctx, status=status.HTTP_200_OK)    
+        return Response(data=ctx, status=status.HTTP_200_OK)
 
     def create(self, request, section_pk=None, topic_pk=None):
         data = request.data + {"user": request.user, "topic_id": topic_pk}

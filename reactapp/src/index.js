@@ -31,7 +31,7 @@ export default function App() {
           <Route path="rules" element={<Rules />} />
           <Route path="signin" element={<SignIn />} />
           <Route path="signup" element={<SignUp />} />
-          <Route path="profile" element={<Profile />} />
+          <Route path="personal" element={<Profile />} />
           <Route path="sections" element={<SectionList/>} />
           <Route path="sections/:sectionId/topics" element={<TopicList/>} />
           <Route path="sections/:sectionId/topics/create" element={<TopicCreate/>} />

@@ -6,12 +6,12 @@ import { useAsync } from 'react-async';
 import Topic from './components/Topic'
 
 
-const loadTopicList = async (sectionId) => {
+const loadTopicList = async ({sectionId}, options) => {
     let headers = {'Authorization': getCookie('access_token')};
     let url = `${BACKEND_ROOT_URL}sections/${sectionId}/topics/`;
-    const res = await request('GET', url, {}, headers)
-    if (!res.ok) throw new Error(res.statusText)
-    return res.json()
+    console.log({options, sectionId})
+    const res = await request('GET', url, {}, headers, {signal: options.signal});
+    return res;
 }
 
 
@@ -30,18 +30,22 @@ export default function TopicList() {
         return <h1 className="text-danger">Error of loading topics</h1>
     }
     if (data) {
-        let topics = data.topics;
+        const topics = data.topics;
+        const section = data.section;
         return (
-            <ol className="list-group list-group-numbered">
-                { 
-                    topics.length > 0 
-                    ?
-                    topics.map(
-                        (topic, ind) => <Topic topic={topic} key={ind} />) 
-                    :
-                    "There are no topics in this section yet."
-                }
-            </ol>
+            <>
+                <h1>Topics for {section.title}</h1>
+                <ol className="list-group list-group-numbered">
+                    { 
+                        topics.length > 0 
+                        ?
+                        topics.map(
+                            (topic, ind) => <Topic sectionId={urlParams.sectionId} topic={topic} key={ind} />) 
+                        :
+                        "There are no topics in this section yet."
+                    }
+                </ol>
+            </>
         );
     }
 }

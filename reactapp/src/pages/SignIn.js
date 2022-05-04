@@ -1,9 +1,10 @@
-import { crdRequest, getCookie, setCookie } from "../functions";
+import { crdRequest, getCookie, setCookie, userRequest } from "../functions";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { BACKEND_ROOT_URL } from "../setting";
 import React from "react";
 import jquery from "jquery";
+
 
 
 let inputErrors = {
@@ -39,13 +40,13 @@ function drawErrors() {
 async function loginResponse (username, password) {
     let url = `${BACKEND_ROOT_URL}auth/token/login/`;
     const res = await crdRequest('POST', url, {username, password});
-    if (!res.ok) throw new Error(res.statusText);
-    return res.json();
+    return res;
 }
 
 
+
 export default function SignIn() {
-    if (getCookie('access_token')) window.location.href = '/';
+    if (window.user) window.location.href = '/';
 
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
@@ -62,9 +63,10 @@ export default function SignIn() {
         loginResponse(username, password)
             .then((res)=>{
                 console.log(res);
-                console.log(res.access);
-                if (res.access) {
-                    setCookie('access_token', res.access);
+                if (res.auth_token) {
+                    setCookie('access_token', `Token ${res.auth_token}`);
+                    // let user = await userRequest();
+                    // window.user = user;
                     window.location.href = '/';
                 }
             })
@@ -83,7 +85,7 @@ export default function SignIn() {
                         id="inputUsername" 
                         className="form-control" 
                         placeholder="Username" 
-                        required autofocus=""
+                        required autoFocus=""
                         onChange={(e)=>{setUsername(e.target.value)}}
                     />
                     <div className="error-list d-flex flex-column"></div>

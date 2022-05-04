@@ -40,13 +40,26 @@ code {
   border-radius: 13px;
 }
 
-.main-wrapper .list-group-item:hover {
+.main-wrapper .list-group-item.list-section-item:hover {
   background-color: #7e8c8e91;
 }
 
 .content-section {
   color: aliceblue;
   text-shadow: 0 0 10px #999494;
+}
+
+.comment-list .card {
+  background-color: rgba(0, 0, 0, 0);
+  border: none;
+}
+.comment-list .card-footer {
+  background-color: rgb(163 183 182 / 29%);
+  border-radius: 15px;
+}
+
+.comment-list .card-footer .btn {
+  margin-left: 5px;
 }
 
 /* .forum-background {
@@ -58,3 +71,44 @@ code {
   background-size: cover;
   background-repeat: no-repeat; 
 } */
+
+.profile-section .form-control:focus {
+  box-shadow: none;
+  border-color: #BA68C8
+}
+
+.profile-section .profile-button {
+  background: rgb(99, 39, 120);
+  box-shadow: none;
+  border: none
+}
+
+.profile-section .profile-button:hover {
+  background: #682773
+}
+
+.profile-section .profile-button:focus {
+  background: #682773;
+  box-shadow: none
+}
+
+.profile-section .profile-button:active {
+  background: #682773;
+  box-shadow: none
+}
+
+.profile-section .back:hover {
+  color: #682773;
+  cursor: pointer
+}
+
+.profile-section .labels {
+  font-size: 11px
+}
+
+.profile-section .add-experience:hover {
+  background: #BA68C8;
+  color: #fff;
+  cursor: pointer;
+  border: solid 1px #BA68C8
+}

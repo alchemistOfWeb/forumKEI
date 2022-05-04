@@ -9,7 +9,6 @@ import Section from './components/Section';
 const loadSectionList = async (options) => {
     let headers = {'Authorization': getCookie('access_token')};
     let url = `${BACKEND_ROOT_URL}sections/`;
-    console.log({url})
     const res = await request('GET', url, {}, headers, {signal: options.signal})
     console.log({res})
     // if (!res) throw new Error(res.statusText)

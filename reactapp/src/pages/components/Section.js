@@ -6,7 +6,7 @@ export default function Section({section}) {
     let linkToDetail = `/sections/${section.id}/topics`;
 
     return (
-        <li className="list-group-item d-flex justify-content-between align-items-start">
+        <li className="list-group-item list-section-item d-flex justify-content-between align-items-start">
             <div className="ms-2 me-auto">
                 <div className="fw-bold">
                     <Link className="text-success" to={linkToDetail}>
@@ -15,7 +15,7 @@ export default function Section({section}) {
                 </div>
                 section_id: {section.id} <span className="text-secondary">last comment...</span>
             </div>
-            <span className="badge bg-primary rounded-pill">{section.total_topics}</span>
+            <span className="badge bg-primary rounded-pill">{section.total_topics} topics</span>
         </li>        
     )
 }

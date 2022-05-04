@@ -1,7 +1,7 @@
 from unicodedata import name
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import TopicViewSet, TopicCommentViewSet, section_list, current_profile
+from .views import TopicViewSet, TopicCommentViewSet, csrf, section_list, current_profile
 
 
 router = DefaultRouter()
@@ -17,8 +17,7 @@ urlpatterns = [
     # path('profile_block/', views.profile_block, name='profile_block'), # post
     path('profile/', current_profile, name='profile'), # get|patch|delete
     path('sections/', section_list, name='section_list'), # get
-    # path('signin/', views.signin, name='signin'), # post
-    # path('signup/', views.signup, name='signup'), # post
+    path('csrf/', csrf, name='get_csrf'), # get
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.authtoken')),
     path('auth/', include('djoser.urls.jwt')),

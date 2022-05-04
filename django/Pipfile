@@ -11,6 +11,8 @@ markdown = "*"
 django-filter = "*"
 djoser = "*"
 django-cors-headers = "*"
+pillow = "*"
+django-imagekit = "*"
 
 [dev-packages]
 

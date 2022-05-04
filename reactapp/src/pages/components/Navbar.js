@@ -7,17 +7,19 @@ import React from "react";
 async function logoutResponse () {
     let headers = {'Authorization': getCookie('access_token')};
     let url = `${BACKEND_ROOT_URL}auth/token/logout/`;
-    const res = await crdRequest('POST', url, {}, headers);
-    if (!res.ok) throw new Error(res.statusText);
-    return res.json();
+    const res = await crdRequest('POST', url, {}, headers);    
+    return res;
 }
 
 function handleLogout() {
     if (window.confirm('Do you really want to logout?')) {
-        logoutResponse();        
-        window.user = undefined;
-        window.location.href = '/';
-        deleteCookie('access-token');
+        logoutResponse()
+            .then((res)=>{
+                console.log({res})
+                window.user = undefined;
+                deleteCookie('access_token');
+                window.location.href = '/';
+            });
     }
 }
 

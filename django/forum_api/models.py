@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
+from imagekit.models import ProcessedImageField
+from imagekit.processors import ResizeToFit
 
 
 class Section(models.Model):
@@ -28,6 +30,16 @@ class Profile(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True)
     is_blocked = models.BooleanField(default=False, blank=True)
+    image_sm = ProcessedImageField(verbose_name="avatar",
+                                upload_to='images/avatars/sm/',
+                                processors=[ResizeToFit(100, 100)],
+                                format='JPEG',
+                                options={'quality': 90},
+                                blank=True,
+                                null=True)
+    
+    def __str__(self) -> str:
+        return self.user.username
 
 
 class TopicComment(models.Model):
