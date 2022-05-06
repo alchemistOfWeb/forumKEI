@@ -8,6 +8,7 @@ from rest_framework.filters import OrderingFilter, SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status, permissions, generics
 from rest_framework.views import APIView
+from uritemplate import partial
 from .models import Topic, TopicComment, Section, Profile
 from .serializers import (TopicSerializer, 
                           TopicCommentSerializer, 
@@ -33,11 +34,31 @@ def csrf(request):
 
 
 @api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
 def current_profile(request):
     print(request.COOKIES) 
     # profile = get_object_or_404(Profile.objects, request.user.id)
     serializer = UserSerializer(request.user)
     return Response({'user': serializer.data})
+
+@api_view(['PATCH'])
+def edit_user(request):
+    print(request.COOKIES) 
+    # profile = get_object_or_404(Profile.objects, request.user.id)
+    data = {}
+    first_name = request.data.get('first_name')
+    if first_name: data.update({'first_name': first_name})
+
+    last_name = request.data.get('last_name')
+    if last_name: data.update({'last_name': last_name})
+
+    email = request.data.get('email')
+    if email: data.update({'email': email})
+
+    serializer = UserSerializer(request.user, data=data, partial=True)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response(data={'ok': True}, status=status.HTTP_205_RESET_CONTENT)
 
 
 # ----------- SECTIONS ----------- #

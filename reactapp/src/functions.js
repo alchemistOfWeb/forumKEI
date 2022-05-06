@@ -102,6 +102,10 @@ export async function request(method, path, data={}, headers={}, options={}) {
     console.log({params})
     return await fetch(path, params)
         .then((response) => {
+            console.log({response});
+            if ([204, 205].find((a)=>a==response.status)) {
+                return {};
+            }
             return response.json();
         })
         .then((data) => {
@@ -117,10 +121,28 @@ export function getAccessToken() {
 
 export async function userRequest(options={}) {
     let url = `${BACKEND_ROOT_URL}profile/`;
-    let headers = {
-        // "Content-Type": "application/json",
+    let headers = {        
         "Authorization": getAccessToken()
     }
     const res = await request('GET', url, {}, headers, options);
+    return res;
+}
+
+export async function postRequest(uri, data) {
+    let headers = {'Authorization': getAccessToken()};
+    let url = `${BACKEND_ROOT_URL}${uri}`;
+    const res = await crdRequest('POST', url, data, headers);    
+    return res;
+}
+
+export async function patchRequest(uri, data) {
+    let headers = {
+        'Authorization': getAccessToken(), 
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+    };
+    let url = `${BACKEND_ROOT_URL}${uri}`;
+    const res = await crdRequest('PATCH', url, data, headers);
+    
     return res;
 }

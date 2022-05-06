@@ -1,17 +1,17 @@
 import React from "react";
-import { BACKEND_ROOT_URL, BACKEND_DOMAIN } from '../setting';
-import { request, getCookie, getAccessToken } from '../functions';
-import { useAsync } from 'react-async';
+import { BACKEND_DOMAIN } from '../setting';
+import { patchRequest } from '../functions';
+// import { useAsync } from 'react-async';
 // import { useParams } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 
 
-const loadProfile = async (options) => {
-    let headers = {'Authorization': getAccessToken()};
-    let url = `${BACKEND_ROOT_URL}profile/`;
-    const res = await request('GET', url, {}, headers, options);
-    return res;
-}
+// const loadProfile = async (options) => {
+//     let headers = {'Authorization': getAccessToken()};
+//     let url = `${BACKEND_ROOT_URL}profile/`;
+//     const res = await request('GET', url, {}, headers, options);
+//     return res;
+// }
 
 
 
@@ -36,10 +36,20 @@ export default function Profile() {
     function handleEditProfile(e) {
         e.preventDefault();
         console.log({email, firstName, lastName});
+        patchRequest('edit_user/', {email, first_name: firstName, last_name: lastName})
+            .then((res)=>{
+                window.location.reload();
+            })
+            .catch((err)=>{
+                console.log(err)
+                alert("Some error!")
+            })            
+        
     }    
     function handleChangePassword(e) {
         e.preventDefault();
         console.log({password});
+        alert('Unfortunately this feature has not been implemented yet')
     }    
 
     return (
@@ -107,8 +117,7 @@ export default function Profile() {
                                 <input 
                                     type="email" 
                                     className="form-control" 
-                                    placeholder="enter email" 
-                                    valueDefault={'hell'}
+                                    placeholder="enter email"                                     
                                     value={email} 
                                     onChange={(e)=>setEmail(e.target.value)}
                                 />
@@ -145,12 +154,12 @@ export default function Profile() {
                                     onChange={(e)=>setConfirmPassword(e.target.value)}
                                 />
                             </div>
+                            <div className="mt-3 text-center">
+                                <button className="btn btn-primary profile-button" type="submit">
+                                    Save Password
+                                </button>
+                            </div>
                         </form>
-                        <div className="mt-3 text-center">
-                            <button className="btn btn-primary profile-button" type="submit">
-                                Save Password
-                            </button>
-                        </div>
                     </div>
                 </div>
                 {/* <div className="col-md-4">

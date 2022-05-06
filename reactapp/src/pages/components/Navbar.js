@@ -11,7 +11,8 @@ async function logoutResponse () {
     return res;
 }
 
-function handleLogout() {
+function handleLogout(e) {
+    e.preventDefault();
     if (window.confirm('Do you really want to logout?')) {
         logoutResponse()
             .then((res)=>{
@@ -36,15 +37,15 @@ export default function Navbar() {
                 >
                     Profile
                 </Link>
-                <Link 
-                    to="#logout" 
+                <a 
+                    href="#" 
                     role="button"
                     className="btn btn-warning text-dark text-decoration-none"
                     id="logout-btn"
                     onClick={handleLogout}
                 >
                     Logout
-                </Link>
+                </a>
             </>
         )
     } else {

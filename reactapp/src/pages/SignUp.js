@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useAsync } from "react-async";
 import { BACKEND_ROOT_URL } from "../setting";
+import { useNavigate } from "react-router-dom";
 
 
 async function createuserResponse (params={}) {
@@ -14,8 +15,7 @@ async function createuserResponse (params={}) {
     }
     let url = `${BACKEND_ROOT_URL}auth/users/`;
     const res = await crdRequest('POST', url, data);
-    if (!res.ok) throw new Error(res.statusText);
-    return res.json();
+    return res;
 }
 
 export default function SignUp() {
@@ -24,6 +24,7 @@ export default function SignUp() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const navigate = useNavigate();
 
     const handleSignUp = (e) => {
         e.preventDefault();
@@ -40,7 +41,7 @@ export default function SignUp() {
                 console.log(res);
 
                 if (res.id) {
-                    window.location.href = '/signin';
+                    navigate('/signin');
                 }
             })
             .catch((err) => {
@@ -58,7 +59,9 @@ export default function SignUp() {
                         id="inputUsername" 
                         className="form-control" 
                         placeholder="Username" 
-                        required autofocus=""
+                        required autoFocus=""
+                        value={username}
+                        onChange={(e)=>setUsername(e.target.value)}
                     />
                     <div className="error-list  d-flex flex-column"></div>
                 </div>
@@ -68,7 +71,9 @@ export default function SignUp() {
                         id="inputEmail" 
                         className="form-control" 
                         placeholder="Email address" 
-                        required autofocus=""
+                        required autoFocus=""
+                        value={email}
+                        onChange={(e)=>setEmail(e.target.value)}
                     />
                     <div className="error-list d-flex flex-column"></div>
                 </div>
@@ -79,6 +84,8 @@ export default function SignUp() {
                         className="form-control" 
                         placeholder="Password" 
                         required
+                        value={password}
+                        onChange={(e)=>setPassword(e.target.value)}
                     />
                     <div className="error-list d-flex flex-column"></div>
                 </div>
@@ -89,6 +96,8 @@ export default function SignUp() {
                         className="form-control" 
                         placeholder="Repeat password" 
                         required
+                        value={confirmPassword}
+                        onChange={(e)=>setConfirmPassword(e.target.value)}
                     />
                     <div className="error-list d-flex flex-column"></div>
                 </div>
