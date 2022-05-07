@@ -71,21 +71,6 @@ export const getCSRFtoken = function() {
     return getCookie("csrftoken");
 }
 
-export async function crdRequest(method, path, data, headers={}) {
-    const csrf = await requestCSRFToken();
-    console.log({csrf});
-    headers = {
-        "X-CSRFToken": csrf,
-        // "Content-Type": "application/x-www-form-urlencoded",
-        "Content-Type": "application/json",
-        ...headers
-    }
-    let options = {
-        credentials: 'include',
-    }
-    return await request(method, path, data, headers, options)
-}
-
 export async function request(method, path, data={}, headers={}, options={}) {
     let params = {
         method: method,
@@ -128,8 +113,27 @@ export async function userRequest(options={}) {
     return res;
 }
 
+export async function crdRequest(method, path, data, headers={}) {
+    const csrf = await requestCSRFToken();
+    console.log({csrf});
+    headers = {
+        "X-CSRFToken": csrf,
+        // "Content-Type": "application/x-www-form-urlencoded",
+        'Authorization': getAccessToken(),
+        
+        ...headers
+    }
+    let options = {
+        credentials: 'include',
+    }
+    return await request(method, path, data, headers, options)
+}
+
 export async function postRequest(uri, data) {
-    let headers = {'Authorization': getAccessToken()};
+    let headers = {         
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+    };
     let url = `${BACKEND_ROOT_URL}${uri}`;
     const res = await crdRequest('POST', url, data, headers);    
     return res;
@@ -137,12 +141,10 @@ export async function postRequest(uri, data) {
 
 export async function patchRequest(uri, data) {
     let headers = {
-        'Authorization': getAccessToken(), 
         'Accept': 'application/json',
         'Content-Type': 'application/json',
     };
     let url = `${BACKEND_ROOT_URL}${uri}`;
     const res = await crdRequest('PATCH', url, data, headers);
-    
     return res;
 }

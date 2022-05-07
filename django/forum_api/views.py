@@ -97,7 +97,7 @@ class TopicViewSet(viewsets.ViewSet):
         return Response(data=ctx, status=status.HTTP_200_OK)
 
     def create(self, request, section_pk=None):
-        data = {**request.data, 'section': section_pk}
+        data = {**request.data, 'section': section_pk, 'author': request.user.id}
         serializer = self.serializer_class(data=data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -155,7 +155,7 @@ class TopicCommentViewSet(viewsets.ViewSet):
         return Response(data=ctx, status=status.HTTP_200_OK)
 
     def create(self, request, section_pk=None, topic_pk=None):
-        data = request.data + {"user": request.user, "topic_id": topic_pk}
+        data = {**request.data, "author": request.user.id, "topic": topic_pk}
         
         serializer = self.create_comment_serializer(data=data)
         serializer.is_valid(raise_exception=True)

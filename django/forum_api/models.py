@@ -19,6 +19,7 @@ class Topic(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     is_blocked = models.BooleanField(default=False, blank=True)
     is_open = models.BooleanField(default=True, blank=True)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, blank=True)
 
     def __str__(self) -> str:
         return self.title
@@ -49,3 +50,5 @@ class TopicComment(models.Model):
     likes = models.PositiveIntegerField(default=0)
     is_blocked = models.BooleanField(default=False, blank=True)
     is_archive = models.BooleanField(default=False, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True)

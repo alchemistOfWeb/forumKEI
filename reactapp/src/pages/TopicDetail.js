@@ -4,6 +4,7 @@ import { useParams, Link } from "react-router-dom";
 import React from 'react';
 import { useAsync } from 'react-async';
 import Comment from './components/Comment'
+import CreateComment from "./components/CreateComment";
 
 
 const loadTopic = async ({sectionId, topicId}, options) => {
@@ -79,6 +80,7 @@ export default function TopicDetail() {
                 "There are no comments on this topic yet."
                 }
                 </ul>
+                <CreateComment topic={topic}/>
             </>
         );
     }

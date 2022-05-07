@@ -57,11 +57,15 @@ class UserSerializer(serializers.ModelSerializer):
 class TopicCommentSerializer(serializers.ModelSerializer):
     # author = serializers.PrimaryKeyRelatedField(queryset=User.objects, read_only=True)
     # author = serializers.RelatedField(read_only=True)
-    author = UserSerializer(read_only=True)
+    # author = UserSerializer(read_only=True)
     # tracks = serializers.PrimaryKeyRelatedField(read_only=True)
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        user = User.objects.get(id=instance.author.id)
+        rep['author'] = UserSerializer(user).data
+        return rep
 
-    # def to_representation(self, instance):
-    #     rep = super().to_representation(instance)
+
     #     # rep["total_likes"] = instance.likes.count()
     #     rep["author"] = instance.author
     #     return rep
