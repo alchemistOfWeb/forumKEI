@@ -81,17 +81,16 @@
 <a name="dependences"></a> 
 
 Для начала установите python.
+Установите npm версии выше 7.14
 
 ```bash
-cd нужный каталог
+cd нужный каталог, где будет лежать код приложения
 git clone https://github.com/alchemistOfWeb/forumKEI.git
 cd forumKEI/django
-pipenv # чтобы установить зависимости
+pipenv # чтобы установить зависимости django
+cd ../reactapp
+npm install # чтобы установить зависимости для react
 ```
-
-Далее установите и настройте geckodriver (нужно для работы selenium).
-скачать можно отсюда, выбрав архив подходящий под вашу ОС https://github.com/mozilla/geckodriver/releases. После скачивания, распакуйте
-После его установки укажите путь в файле `opinion_scrapper/opinion_scrapper/settings.py` в переменную `GECKODRIVER_PATH`.
 
 
 ### 2 Секретный ключ
@@ -137,9 +136,16 @@ pas: ********** # придумайте, например admin
 ### 6 Запуск тестового сервера
 <a name="test_server"></a> 
 
-теперь можно запустить тестовый сервер
+Запуск тестового сервера для бекенда
+> ../django/
 ```bash
 pipenv run python manage.py runserver
+```
+
+Тестовый сервер для фронтенда (запускайте из новой вкладки терминала)
+> ../reactapp/
+```bash
+npm install
 ```
 
 ## 3. Описание функционала приложения
